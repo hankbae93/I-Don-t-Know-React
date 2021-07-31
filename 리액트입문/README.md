@@ -12,36 +12,73 @@ b와 c 사이에 z를 넣을 때 생기는 일
 z는 c로 바뀌고, c는 d 로바뀌고, 맨 마지막에 있는 d 가 제거됩니다.
 ```
 
-## 1. 배열이 업데이트 될 때 key를 준다면?
+## 1. 배열이 업데이트 될 때 key를 줘야 되는 이유
 
 ```js
 리액트는 똑똑하게 기존 키들의 값이 바뀌지 않았다면 새로 추가된 키와 값만 리랜더한다. 기존 키의 값이 변경됐다면 그 키의 값만 리렌더링 된다.
 
-[
-    key: 0,  {id:0, title: 'hello!', content:'word'},
-    key: 1,  {id:1, title: 'myname!', content:'is!'},
-    key: 2,  {id:2, title: 'lee!', content:'yong!'},
-    key: 3,  {id:3, title: 'jun!', content:'blabla!'}
-];
+const [list, setList] = useState([
+    {id:0, title: 'hello!', content:'word'},
+    {id:1, title: 'myname!', content:'is!'},
+    {id:2, title: 'lee!', content:'yong!'},
+    {id:3, title: 'jun!', content:'blabla!'}
+]);
+
+{
+    list.map((item, idx) => {
+        return (
+            <div key={item.id}>
+                {item.title} - <small>{item.content}</small>
+            </div>
+        )
+    })
+}
+
+이 단계에서 id가 0인 아이템의 title을 'hi'로 바꾼다면?
+setList([
+    {id:0, title: 'hi!', content:'word'},
+    {id:1, title: 'myname!', content:'is!'},
+    {id:2, title: 'lee!', content:'yong!'},
+    {id:3, title: 'jun!', content:'blabla!'}
+])
+
+리액트는 각 키의 요소들이 바뀐 부분이 있는지 확인 ->
+id가 0인 요소의 title이 바뀐 것을 확인 ->
+전체 컴포넌트 중 키가 아이템의 id인 컴포넌트만 리렌더링한다.
 ```
 
 ## 2. map 함수의 index로 key를 줄 때 곤란한 이유
 
 ```js
-key: 0,  {id:4, title: 'add!', content:'yeah!'},
-key: 1,  {id:0, title: 'hello!', content:'word'},
-key: 2,  {id:1, title: 'myname!', content:'is!'},
-key: 3,  {id:2, title: 'lee!', content:'yong!'},
-key: 4,  {id:3, title: 'jun!', content:'blabla!'}
+const [list, setList] = useState([
+    {id:0, title: 'hello!', content:'word'},
+    {id:1, title: 'myname!', content:'is!'},
+    {id:2, title: 'lee!', content:'yong!'},
+    {id:3, title: 'jun!', content:'blabla!'}
+]);
 
+{
+    list.map((item, idx) => {
+        return (
+            <div key={idx}>
+                {item.title} - <small>{item.content}</small>
+            </div>
+        )
+    })
+}
 
-간단하게 리액트의 키는 그 요소에 특정 이름을 준다고 생각하면 된다.
+이 단계에서 id가 0인 아이템을 중간에 넣고 싶어졌다
 
-그러나 map 함수의 index로 해버리면 중간에 넣거나 맨앞에 넣는 순간
+setList([
+    {id:1, title: 'myname!', content:'is!'},
+    {id:0, title: 'hi!', content:'word'},
+    {id:2, title: 'lee!', content:'yong!'},
+    {id:3, title: 'jun!', content:'blabla!'}
+])
 
-기존 key 0에는 항상 {id:0, title: 'hello!', content:'word'}이 들어있어야하는데
-
-다른 값이 들어가게 되면서 리액트가 새로운 배열을 넣었다고 판단하게 만들고 전체를 리렌더링해버린다.
+이러는 순간 리액트는 인덱스 0번의 요소의 값이 통째로 바뀌는 걸 확인
+-> 이때부터 배열이 순서가 바뀐건지 ,값만 바꾼건지, id를 바꾼건지 판단할 수 없음
+-> 전체 배열이 통째로 바뀌었다고 판단해 모든 컴포넌트가 불필요하게 리렌더링된다
 ```
 
 # useRef란?
