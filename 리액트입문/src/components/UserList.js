@@ -3,33 +3,26 @@ import React from 'react';
 // component
 import { Container } from 'components/common/layout';
 
-const User = ({ user }) => {
+const User = ({ user, onRemove, onToggle }) => {
     return (
         <div>
-            <b>{user.username}</b> <span>({user.email})</span>
+            <b
+                style={{
+                    cursor: 'pointer',
+                    color: user.active ? 'green' : 'black'
+                }}
+                onClick={() => onToggle(user.id)}
+            >
+                {user.username}
+            </b> 
+            
+            <span>({user.email})</span>
+            <button onClick={() => onRemove(user.id)}>삭제</button>
         </div>
-    )
+    );
 };
 
-const UserList = () => {
-    const users = [
-        {
-          id: 1,
-          username: 'velopert',
-          email: 'public.velopert@gmail.com'
-        },
-        {
-          id: 2,
-          username: 'tester',
-          email: 'tester@example.com'
-        },
-        {
-          id: 3,
-          username: 'liz',
-          email: 'liz@example.com'
-        }
-    ];
-
+const UserList = ({ users, onRemove, onToggle }) => {
     return (
         <Container>
             {/* 
@@ -64,7 +57,12 @@ const UserList = () => {
             */}
             {
                 users.map(user => {
-                    return <User user={user} key={user.id}/>
+                    return <User 
+                    onRemove={onRemove} 
+                    user={user} 
+                    key={user.id}
+                    onToggle={onToggle}
+                    />
                 })
             }
         </Container>
