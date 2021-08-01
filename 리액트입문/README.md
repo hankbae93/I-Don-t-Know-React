@@ -44,7 +44,7 @@ setList([
 
 리액트는 각 키의 요소들이 바뀐 부분이 있는지 확인 ->
 id가 0인 요소의 title이 바뀐 것을 확인 ->
-전체 컴포넌트 중 키가 아이템의 id인 컴포넌트만 리렌더링한다.
+전체 컴포넌트 중 키가 id: 0인 아이템 컴포넌트만 리렌더링한다.
 ```
 
 ## 2. map 함수의 index로 key를 줄 때 곤란한 이유
@@ -91,3 +91,61 @@ setList([
     - setTimeout, setInterval 을 통해서 만들어진 id
     - 외부 라이브러리를 사용하여 생성된 인스턴스
     - scroll 위치
+
+# useEffect란?
+
+```jsx
+useEffect(() => {
+    console.log('화면에서 나타남!');
+
+    // cleanup 함수, 컴포넌트가 사라질 때 함수를 리턴하고 호출된다
+    return () => {
+        console.log('화면에서 사라짐');
+    }
+}, [])
+
+1. 첫번째 파라미터 : 호출할 함수
+2. 두번째 파라미터 (deps) : 의존값이 들어있는 배열
+deps 안에 props나 상태를 넣지 않게 된다면 최신 props/ 상태 가리킬 수 없음
+```
+
+## 1. 주로 마운트 시 하는 작업들
+
+    props 로 받은 값을 컴포넌트의 로컬 상태로 설정
+
+    외부 API 요청 (REST API 등)
+
+    라이브러리 사용 (D3, Video.js 등...)
+
+    setInterval 을 통한 반복작업 혹은 setTimeout 을 통한 작업 예약
+
+## 2. 주로 언마운트 시 하는 작업들
+
+    setInterval, setTimeout 을 사용하여 등록한 작업들 clear 하기 (clearInterval, clearTimeout)
+
+    removeEventListener
+
+    라이브러리 인스턴스 제거
+
+# useMemo란?
+
+```jsx
+const count = useMemo(() => {
+    countActiveUsers(users);
+}, [users]);
+
+deps 배열에 넣은 내용이 바뀌면 등록한 함수를 호출해서 값을 연산하고
+
+바뀌지 않았다면 이전에 "연산된 값"을 재사용
+```
+
+# useCallback이란?
+
+```jsx
+const onRemove = useCallback(id => {
+    setUsers(users.filter(user => user.id !== id));
+}, [users]);
+
+"특정 함수"를 새로 만들지 않고 재사용하고 싶을때 사용합니다.
+deps안에는 꼭 해당 상태나 props를 넣어줘야 최신 값을 참조합니다.
+```

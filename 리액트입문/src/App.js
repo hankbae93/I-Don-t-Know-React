@@ -1,9 +1,14 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useMemo, useCallback } from 'react';
 
 // component
 import InputSample from 'components/InputSample';
 import UserList from 'components/UserList';
 import CreateUser from 'components/CreateUser';
+
+function countActiveUsers(users) {
+  console.log('활성 사용자 수를 세는중...');
+  return users.filter(user => user.active).length;
+}
 
 function App() {
   const [inputs, setInputs] = useState({
@@ -45,21 +50,9 @@ function App() {
       [name]: value
     });
   };
-
-  /*
-  useRef의 용도
-  1. 특정 DOM을 선택해야할 때
-  2. 컴포넌트안에서 조회 및 수정할 수 있는 변수 관리 
-  => state와 다르게 값이 변한다고 해서 리렌더링 되지않는다
-  => ref.current로 조회와 업데이트 
-
-  setTimeout, setInterval 을 통해서 만들어진 id
-  외부 라이브러리를 사용하여 생성된 인스턴스
-  scroll 위치
-  */
-
+  
   const nextId = useRef(4); 
-  const onCreate = () => {
+  const onCreate = useCallback(() => {
     const user = {
       id: nextId.current,
       username,
@@ -73,13 +66,13 @@ function App() {
       email: ''
     });
     nextId.current += 1;
-  };
+  }, [users, username, email]);
 
-  const onRemove = id => {
+  const onRemove = useCallback(id => {
     setUsers(users.filter(user => user.id !== id));
-  };
+  }, [users]);
 
-  const onToggle = id => {
+  const onToggle = useCallback(id => {
     setUsers(
       users.map(user => 
         user.id === id 
@@ -89,7 +82,9 @@ function App() {
         } : user
       )
     )
-  };
+  }, [users]);
+  
+  const count = useMemo(() => countActiveUsers(users), [users]);  
 
   const registerState = {
     username, email, onChange, onCreate 
@@ -100,6 +95,7 @@ function App() {
       {/* <InputSample /> */}
       <CreateUser {...registerState} />
       <UserList users={users} onRemove={onRemove} onToggle={onToggle}/>
+      <div>활성 사용자 수 : {count}</div>
     </div>
   );
 }
