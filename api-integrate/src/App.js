@@ -7,7 +7,7 @@ const testIp = 'https://jsonplaceholder.typicode.com/users';
 // useAsync에서는 promise를 바로 data에 담아서 
 // 요청을 한 이후에 reponse에서 data 추출 반환 
 
-async function getUsers() {
+async function getUsers(id) {
   const response = await axios.get(testIp);
   return response.data;
 }
