@@ -1,54 +1,64 @@
-// 1단계 
-const element = <h1 title="foo">Hello</h1>
-const container = document.getElementById("root")
-
-ReactDOM.render(element, container);
-
-// 2단계
-const element = React.createElement(
-    "h1",
-    { title: 'foo' },
-    "Hello"
-)
-const container = document.getElementById("root")
-ReactDOM.render(element, container);
-
-// 3단계
-const element = {
-    type: 'h1',
-    props: {
-        title: 'foo',
-        children: 'Hello'
-    }
-}
-const container = document.getElementById("root")
-ReactDOM.render(element, container)
-
-const node = document.createElement(element.type);
-node["title"] = element.props.title;
-
-const text = document.createTextNode("");
-text["nodeValue"] = element.props.children;
-
-node.appendChild(text);
-container.appendChild(node);
-
-// 4단계
-const element = {
+const El = {
     type: "h1",
     props: {
-      title: "foo",
-      children: "Hello",
-    },
-  }
-  ​
-  const container = document.getElementById("root")
-  ​
-  const node = document.createElement(element.type)
-  node["title"] = element.props.title
-  ​
-  const text = document.createTextNode("")
-  text["nodeValue"] = element.props.children
-  ​
-  node.appendChild(text)
-  container.appendChild(node)
+        title: "foo",
+        children: "Hello"
+    }
+}
+// <h1 title="foo">Hello</h1> 이 HTML 문자열을 객체로 표현
+
+const node = document.createElement(El.type);
+node["title"] = El.props.title;
+// <h1 title="foo"></h1> 태그 및 프로퍼티 생성
+
+const text = document.createTextNode("");
+text["nodeValue"] = El.props.children;
+
+node.appendChild(text);
+const container = document.getElementById("root");
+container.appendChild(node);
+
+
+function createElement(type, props, ...children) {
+    return {
+        type,
+        props: {
+            ...props,
+            children: children.map(child => 
+                typeof child === "object"
+                ? child
+                : createTextElement(child)
+            )
+        },
+    }
+}
+
+function createTextElement(text) {
+    return {
+        type: "TEXT_ELEMENT",
+        props: {
+            nodeValue: text,
+            children: [],
+        }
+    }
+}
+
+const Didact = {
+    createElement,
+}
+
+const element = Didact.createElement(
+    "div",
+    { id: "foo" },
+    Didact.createElement("a", null, "bar"),
+    Didact.createElement("b")
+);
+
+/*
+    const element = (
+        <div id="foo">
+            <a>bar</a>
+            <b />
+        </div>
+    )
+*/
