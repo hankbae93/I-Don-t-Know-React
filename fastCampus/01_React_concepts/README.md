@@ -43,3 +43,9 @@ const props = {
 
 - SSR: js가 전부 다운로드 되지 않아도, 일단 화면 HTML을 다운받은뒤 js 다운
 
+# 리액트 핵심 모듈 
+
+```jsx
+import ReactDOM from 'react-dom';
+import React from 'react';
+```

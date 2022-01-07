@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>example</title>    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            border: none;
+        }
+
+        #root p {
+            font-size: 20px;
+            color: #fff;
+            background-color: #2b2b2b;
+            text-align: center;
+            width: 200px;
+        }
+
+        #btn_plus {
+            background-color: red;
+            border: 2px solid #2b2b2b;
+            font-size: 15px;
+            width: 200px;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <button id="btn_plus">+</button>
+    <!-- <button id="btn_plus">+</button> -->
+
+    <script crossorigin src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script type="text/javascript">
+        console.log(React);
+        console.log(ReactDOM);
+        const root = document.querySelector('#root');
+        const btn_plus = document.querySelector('#btn_plus');
+        /*
+        let i = 0;
+        root.innerHTML = `<p>init: ${i}</p>`;
+        btn_plus.addEventListener('click', e => {
+            root.innerHTML = `<p>init: ${++i}</p>`;            
+        })
+        */
+
+        /*
+        const component = {
+            message: 'init',
+            count: 0,
+            render(){
+                return `<p>${this.message}: ${this.count}</p>`
+            }
+        };
+
+        function render(rootElement, component) {
+            rootElement.innerHTML = component.render();
+        }
+
+        render(root, component);
+        btn_plus.addEventListener('click', () => {
+            component.message = "Update";
+            component.count = component.count + 1;
+            render(root, component);
+        })
+        */
+        const Component = props => {
+            // React.createElement(DOM, attributes / props , 돔안에 들어갈 textNode / 컴포넌트 등등 )
+            return React.createElement( // 실제 DOM이 아니고 가상 돔의 element
+                'p', 
+                null, 
+                `${props.message} : ${props.count}`
+            )
+        }
+
+        // ReactDOM.render(Component({message: "init", count: 2}), root)  
+        ReactDOM.render(React.createElement(Component, {message: 'init', count: 0}, null), root)
+        btn_plus.addEventListener('click', () => {
+            ReactDOM.render(
+                React.createElement(
+                    Component, 
+                    {message: 'update', count: 1}, 
+                    null
+                ),
+                root
+            );
+        })
+    </script>
+</body>
+</html>
