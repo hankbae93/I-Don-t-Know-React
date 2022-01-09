@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>example</title>    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            border: none;
+        }
+
+        #root p {
+            font-size: 20px;
+            color: #fff;
+            background-color: #2b2b2b;
+            text-align: center;
+            width: 200px;
+        }
+
+        #btn_plus {
+            background-color: red;
+            border: 2px solid #2b2b2b;
+            font-size: 15px;
+            width: 200px;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script crossorigin src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script type="text/babel">
+        /*
+        React.createElement(
+            type, // 태그 이름 문자열 | 리액트 컴포넌트 | React.Fragment
+            [props],
+            [...children]  
+        )        
+        const Component = ({ title }) => {
+            return React.createElement('p', null, `${title}`);
+        }
+
+        ReactDOM.render(
+            React.createElement(
+                Component,
+                { title: "HELLO" },
+                null
+            ),
+            document.querySelector('#root')
+        )
+        */
+        function Component(props) {
+            return <div>{props.title}</div>
+        }
+
+        // Component.defaultProps = { title: ranja };
+
+        class ClassComponent extends React.Component {
+            // state = {
+            //     count: 0
+            // }
+            // constructor(props) {
+            //     super(props);
+
+            //     this.state = { count: 0 };
+            //     this.click = this.click.bind(this)
+            // }
+
+            // click() {
+            //     this.setState((state) => ({...state, count: state.count + 1}))
+            // }
+
+            click = () => {
+                this.setState((state) => ({...state, count: state.count + 1}))
+            }
+
+            render() {
+                return (
+                    <div>
+                        <button onClick={}>클릭</button>
+                        {this.props.message}
+                        <p>{this.state.count}</p>
+                    </div>
+                )
+            }
+
+            componentDidMount() {
+                setTimeOut(() => {
+                    this.setState({
+                        count: this.state.count + 1
+                    })
+                }, 1000)
+            }
+
+            static defaultProps = {
+                title: 'Ranja2'
+            }
+        }
+
+        // ClassComponent.defaultProps = {
+        //     title: 'Ranja'
+        // };
+
+        ReactDOM.render(
+            <Component title="intro" />,
+            document.querySelector('#root')
+        )
+
+    </script>
+</body>
+</html>

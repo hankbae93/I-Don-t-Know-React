@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>example</title>    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            border: none;
+        }
+
+        #root p {
+            font-size: 20px;
+            color: #fff;
+            background-color: #2b2b2b;
+            text-align: center;
+            width: 200px;
+        }
+
+        #btn_plus {
+            background-color: red;
+            border: 2px solid #2b2b2b;
+            font-size: 15px;
+            width: 200px;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script crossorigin src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script type="text/babel">
+        /* 
+        class App extends React.Component {
+            state = {
+                age: 39
+            }
+            interval = null;
+            constructor(props) {
+                super(props);
+                console.log("constructor", props)
+            }
+
+            render() {
+                console.log('render');
+                return (
+                    <div>
+                        <h2>
+                            Hello {this.props.name}님의 나이는 {this.state.age}입니다.
+                        </h2>
+                    </div>
+                )
+            }
+            // mount
+            componentWillMount() {  // => getDerivedStateProps 로 바뀜
+                console.log('componentWillMount')
+            }
+            // static getDerivedStateProps(nextProps, prevState) { 
+                
+            //     console.log("getDerivedStateProps", nextProps, prevState)
+            //     return {
+            //         age: 330
+            //     };
+            // }
+
+            componentDidMount() { 
+                console.log('componentDidMount')
+
+                this.interval = setInterval(() => {
+                    console.log("setInterval");
+                    this.setState(prev => ({...prev, age: prev.age + 1}))
+                }, 2000);
+            }
+
+            // updation
+            // componentWillReceiveProps(nextProps) { // => getDerivedStateProps 로 바뀜
+            //     // props가 변경됐을떄 
+            //     console.log("componentWillReceiveProps", nextProps)
+            // }
+            shouldComponentUpdate(nextProps, nextState) {
+                // props, state
+                console.log("shouldComponentUpdate", nextProps, nextState)
+                // return (nextState.age && nextState.age < 41) // true는 렌더, false는 렌더하지않음
+                return true;
+            }
+            // componentWillUpdate(nextProps, nextState) { // => getSnapshotBeforeUpdate로 바뀜
+            //     // 리렌더 되기전 
+            //     console.log("componentWillUpdate", nextProps, nextState)
+            // }
+            componentDidUpdate(prevProps, prevState) {
+                // 리렌더후
+                console.log("componentDidUpdate", prevProps, prevState)
+            }
+
+            // unmount
+            componentWillUnmount(){
+                clearInterval(this.interval)
+            }
+        }
+        */
+       /*
+       let i = 0;
+       class App extends React.Component {
+           state = { list: [] };
+           render() {
+               return (
+                    <div id="list" style={{height: 100, overflow: 'scroll'}}>
+                        {this.state.list.map((i) => {
+                            return <div>{i}</div>
+                        })}
+                    </div>
+               )
+           }
+
+           componentDidMount(){
+               setInterval(() => {
+                   this.setState(state => ({
+                       list: [...state.list, i++]
+                   }))
+               }, 1000)
+           }
+
+           // snapShot에 저장
+           getSnapshotBeforeUpdate(prevProps, prevState) {
+               if (prevState.list.length === this.state.list.length) return null; // 
+               const list = document.querySelector('#list');
+               return list.scrollHeight - list.scrollTop;
+           }
+
+           componentDidUpdate(prevProps, prevState, snapshot) {
+               if (snapshot) {
+                    const list = document.querySelector('#list');
+                    list.scrollTop = list.scrollHeight - snapshot;
+               }            
+           }
+       }
+       */
+
+       class App extends React.Component {
+           state = {
+               hasError: false
+           };
+           render() {
+               if (this.state.hasError) {
+                return <div>에러 발생</div>
+               }
+               return <WebService />
+           }
+           // error boundaries
+           // 리액트 자가지신의 에러는 잡을 수 없기 때문에 error boundaries 라이브러리를 설치해서 에러처리를 할 수 있다.
+
+           componentDidCatch(error, info) {
+               this.setState({ hasError: true }) // 에러가 발생하면 다시 setState 렌더함수로 간다
+           }
+       }
+
+        ReactDOM.render(
+            <App name="ranja" />,
+            document.querySelector('#root')
+        )
+
+    </script>
+</body>
+</html>
