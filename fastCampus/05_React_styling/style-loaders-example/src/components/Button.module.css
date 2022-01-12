@@ -1,0 +1,26 @@
+.button {
+  background-color: #2b2b2b;
+  color: #fff;
+  border-radius: 15px;
+  padding: 10px 25px;
+  margin: 0 1em;
+  font-size: 20px;
+}
+
+.loading {
+  border: 2px solid grey;
+  color: grey;
+}
+
+.primary {
+  background-color: #2b2b2b;
+  color: #fff;
+  border-radius: 15px;
+  padding: 10px 25px;
+  margin: 0 1em;
+  font-size: 20px;
+}
+
+.active {
+  cursor: pointer;
+}
