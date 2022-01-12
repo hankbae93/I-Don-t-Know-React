@@ -1,8 +1,10 @@
 import React from "react";
+import moment from "moment";
 
 import {
   Container,
   BookThumbnail,
+  BookInfo,
   BookContents,
 } from "./BookListItem.elements";
 
@@ -27,7 +29,14 @@ const BookListItem = ({ data }) => {
       <BookThumbnail>
         <img src={thumbnail} />
       </BookThumbnail>
-      <BookContents>{contents}</BookContents>
+      <div style={{ width: "100%" }}>
+        <BookInfo>
+          <p>{sale_price}</p>
+          <p>{moment(datetime).format("YYYY.MM.DD")}</p>
+          <p>{authors.join(",")}</p>
+        </BookInfo>
+        <BookContents>{contents}</BookContents>
+      </div>
     </Container>
   );
 };

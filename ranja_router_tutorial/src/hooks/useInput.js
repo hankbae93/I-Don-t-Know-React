@@ -1,7 +1,7 @@
-import React, { useCallback, useState, useEffect } from "react";
+import { useCallback, useState } from "react";
 
-const useInput = () => {
-  const [value, setValue] = useState("");
+const useInput = (defaultValue) => {
+  const [value, setValue] = useState(defaultValue ?? "");
 
   const onChange = useCallback(
     (e) => {
@@ -10,7 +10,7 @@ const useInput = () => {
     [value]
   );
 
-  return [value, onChange];
+  return [value, onChange, setValue];
 };
 
 export default useInput;
