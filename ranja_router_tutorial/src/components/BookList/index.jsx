@@ -18,7 +18,7 @@ const BookList = ({ data }) => {
   return (
     <Wrapper>
       {data.map((book, i) => {
-        return <BookListItem data={book} key={book?.isbn} />;
+        return <BookListItem data={book} key={i} />;
       })}
       {data.length === 0 && <div>조회되는 서적이 없습니다.</div>}
     </Wrapper>
