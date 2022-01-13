@@ -1,105 +1,95 @@
 import React, { useState, useLayoutEffect, useEffect } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import axios from "../api";
-import useInput from "../hooks/useInput";
+import useQueryInput from "../hooks/useQueryInput";
 import queryString from "query-string";
 
-import Filter from "../components/Search/Filter";
-import BookList from "../components/Search/BookList";
+import Filter from "../components/Filter";
+import BookList from "../components/BookList";
 
 const Search = () => {
   const history = useHistory();
   const location = useLocation();
   const [list, setList] = useState([]);
-  const [value, onChange, setValue] = useInput("");
+  const [value, onChange] = useQueryInput("", "query");
+  const [price, onPriceChange] = useQueryInput(0, "price");
 
+  // 주소이동에 따른 API 호출
+  // 각 필터, 검색어는 주소이동만 하고 그 주소이동 후 쿼리를 체크하고 API를 호출하게 설정
   const getBooks = async (query) => {
     await axios.get(`/book?query=${query}&size=30`).then((res) => {
       if (res.data) {
-        console.log(res.data, "책 리스트 조회");
-        setList(res.data.documents ?? []);
+        console.log(res.data, `${query}책 리스트 조회`);
+        setList((prev) => res.data.documents ?? []);
       }
     });
   };
 
-  const searchBooks = async (e) => {
-    e.preventDefault();
-    history.push(`?query=${value}`);
-    // await getBooks(value);
-  };
-
-  const filterBookByQuery = async () => {
+  const mountAction = async () => {
     const query = queryString.parse(location.search);
-    if (query.query) {
-      setValue((prev) => query.query);
-      await getBooks(query.query);
-    } else {
-      return;
-    }
+    const isQuery = Object.keys(query).length !== 0;
+    if (isQuery) {
+      if (query.query) {
+        await getBooks(query.query);
+      }
 
-    if (query.price) {
-      const queryPrice = parseInt(query.price);
-      setPrice((prev) => queryPrice);
-      setList((prev) => {
-        console.log(
-          prev.filter((data) => queryPrice >= data.sale_price),
-          "모냐?"
+      if (query.price) {
+        setList((prev) =>
+          prev.filter((data) => query.price >= data.sale_price)
         );
-        return prev.filter((data) => queryPrice >= data.sale_price);
-      });
+      }
+
+      if (query.authors) {
+        // setList(prev => prev.filter(data => ))
+      }
     }
   };
 
   useLayoutEffect(() => {
-    filterBookByQuery();
+    mountAction();
   }, [location]);
-
-  const [price, onPriceChange, setPrice] = useInput(0);
-
-  useEffect(() => {
-    const query = queryString.parse(location.search);
-    if (price > 0) {
-      let str = "?";
-      for (const key in query) {
-        if (key === "price") {
-          str += `${key}=${price}&`;
-        } else {
-          str += `${key}=${query[key]}&`;
-        }
-      }
-      if (!query.price) {
-        str += `price=${price}&`;
-      }
-      history.push(str);
-    }
-  }, [price]);
 
   return (
     <>
       <div style={{ display: "flex" }}>
-        <form onSubmit={searchBooks}>
+        <form onSubmit={(e) => e.preventDefault()}>
           <input
             placeholder='검색어를 입력해주세요'
-            name='target'
+            name='query'
             value={value}
             onChange={onChange}
             required
           />
+          <label htmlFor='price'>
+            <h3>판매가</h3>
+            <input
+              id='price'
+              name='price'
+              type='range'
+              min='0'
+              max='100000'
+              step={100}
+              value={price}
+              onChange={onPriceChange}
+            />
+            <span>{price}</span>
+          </label>
+          {/* <label htmlFor='price'>
+            <h3>판매가</h3>
+            <input
+              id='price'
+              name='price'
+              type='range'
+              min='0'
+              max='100000'
+              step={100}
+              value={price}
+              onChange={onPriceChange}
+            />
+            <span>{price}</span>
+          </label> */}
         </form>
         {/* <Filter setList={setList} /> */}
-        <label htmlFor='price'>
-          <h3>판매가</h3>
-          <input
-            id='price'
-            type='range'
-            min='0'
-            max='100000'
-            step={1000}
-            value={price}
-            onChange={onPriceChange}
-          />
-          <span>{price}</span>
-        </label>
       </div>
       <BookList data={list} />
     </>
