@@ -1,12 +1,7 @@
 import { createAction, createActions, handleActions } from "redux-actions";
-
-interface Book {}
-
-interface BooksState {
-  books: Book[] | null;
-  loading: boolean;
-  error: Error | null;
-}
+import { call, put, select, takeLatest } from "redux-saga/effects";
+import BookService from "../../services/BookService";
+import { BooksState, BookType } from "../../types";
 
 const initialState: BooksState = {
   books: null,
@@ -23,7 +18,7 @@ export const { pending, success, fail } = createActions(
   { prefix }
 );
 
-const reducer = handleActions<BooksState, Book[]>(
+const reducer = handleActions<BooksState, BookType[]>(
   {
     PENDING: (state) => ({
       ...state,
@@ -49,4 +44,19 @@ export default reducer;
 
 // saga
 
-export function* booksSaga() {}
+export const { getBooks } = createActions("GET_BOOKS", { prefix });
+
+function* getBooksSaga() {
+  try {
+    yield put(pending());
+    const token: string = yield select((state) => state.auth.token);
+    const books: BookType[] = yield call(BookService.getBooks, token);
+    yield put(success(books));
+  } catch (error: any) {
+    yield put(fail(new Error(error?.response?.data?.error || "UNKNOWN ERROR")));
+  }
+}
+
+export function* booksSaga() {
+  yield takeLatest(`${prefix}/GET_BOOKS`, getBooksSaga); // 중복되는 사가중에서 제일마지막을 가져오는 메소드
+}

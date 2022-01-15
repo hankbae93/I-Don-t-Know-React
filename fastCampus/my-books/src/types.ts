@@ -12,7 +12,22 @@ export interface AuthState {
   error: Error | null;
 }
 
+export interface BookType {
+  bookId: number;
+  title: string;
+  author: string;
+  createdAt: string;
+  url: string;
+}
+
+export interface BooksState {
+  books: BookType[] | null;
+  loading: boolean;
+  error: Error | null;
+}
+
 export interface RootState {
   auth: AuthState;
+  books: BooksState;
   router: Reducer<RouterState<unknown>, AnyAction>;
 }
