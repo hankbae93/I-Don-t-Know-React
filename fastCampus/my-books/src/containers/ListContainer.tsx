@@ -1,9 +1,11 @@
 import React, { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import List from "../components/List";
+import { push } from "connected-react-router";
 import { BookType, RootState } from "../types";
 import { getBooks as getBooksSagaStart } from "../redux/modules/books";
 import { logout as logoutSagaStart } from "../redux/modules/auth";
+
+import List from "../components/List";
 
 const ListContainer = () => {
   const books = useSelector<RootState, BookType[] | null>(
@@ -26,6 +28,10 @@ const ListContainer = () => {
     dispatch(logoutSagaStart());
   }, [dispatch]);
 
+  const goAdd = useCallback(() => {
+    dispatch(push("/add"));
+  }, [dispatch]);
+
   return (
     <List
       books={books}
@@ -33,6 +39,7 @@ const ListContainer = () => {
       getBooks={getBooks}
       error={error}
       logout={logout}
+      goAdd={goAdd}
     />
   );
 };

@@ -26,6 +26,13 @@ export interface BooksState {
   error: Error | null;
 }
 
+export interface BookReqType {
+  message: string;
+  title: string;
+  author: string;
+  url: string;
+}
+
 export interface RootState {
   auth: AuthState;
   books: BooksState;

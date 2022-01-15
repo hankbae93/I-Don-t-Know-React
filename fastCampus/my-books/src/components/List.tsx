@@ -11,6 +11,7 @@ interface ListProps {
   getBooks: () => void;
   error: Error | null;
   logout: () => void;
+  goAdd: () => void;
 }
 
 const List: React.FC<ListProps> = ({
@@ -19,6 +20,7 @@ const List: React.FC<ListProps> = ({
   getBooks,
   error,
   logout,
+  goAdd,
 }) => {
   useEffect(() => {
     getBooks();
@@ -29,8 +31,6 @@ const List: React.FC<ListProps> = ({
       logout();
     }
   }, [error, logout]);
-
-  const goAdd = () => {};
 
   return (
     <Layout>
