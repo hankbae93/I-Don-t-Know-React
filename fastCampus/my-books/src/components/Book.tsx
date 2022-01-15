@@ -1,6 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { BookOutlined, EditOutlined, HomeOutlined } from "@ant-design/icons";
+import {
+  BookOutlined,
+  EditOutlined,
+  HomeOutlined,
+  DeleteOutlined,
+} from "@ant-design/icons";
 import { BookType } from "../types";
 import moment from "moment";
 import { Button, Tooltip } from "antd";
@@ -27,7 +32,7 @@ const Book: React.FC<BookProps> = ({
       <div>{moment(createdAt).format("MM-DD-YYYY hh:mm a")}</div>
       <div>
         <Tooltip title={url}>
-          <a href={url} target='_BLANK'>
+          <a href={url} rel='no_referrer' target='_BLANK'>
             <Button
               size='small'
               type='primary'
@@ -49,7 +54,8 @@ const Book: React.FC<BookProps> = ({
             size='small'
             type='primary'
             shape='circle'
-            icon={<EditOutlined />}
+            danger
+            icon={<DeleteOutlined />}
           />
         </Tooltip>
       </div>

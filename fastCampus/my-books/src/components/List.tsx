@@ -9,15 +9,28 @@ interface ListProps {
   books: BookType[] | null;
   loading: boolean;
   getBooks: () => void;
+  error: Error | null;
+  logout: () => void;
 }
 
-const List: React.FC<ListProps> = ({ books, loading, getBooks }) => {
+const List: React.FC<ListProps> = ({
+  books,
+  loading,
+  getBooks,
+  error,
+  logout,
+}) => {
   useEffect(() => {
     getBooks();
   }, [getBooks]);
 
+  useEffect(() => {
+    if (error) {
+      logout();
+    }
+  }, [error, logout]);
+
   const goAdd = () => {};
-  const logout = () => {};
 
   return (
     <Layout>
