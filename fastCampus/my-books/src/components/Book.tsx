@@ -10,7 +10,9 @@ import { BookType } from "../types";
 import moment from "moment";
 import { Button, Tooltip } from "antd";
 
-interface BookProps extends BookType {}
+interface BookProps extends BookType {
+  deleteBook: (bookId: number) => void;
+}
 
 const Book: React.FC<BookProps> = ({
   bookId,
@@ -18,6 +20,7 @@ const Book: React.FC<BookProps> = ({
   author,
   createdAt,
   url,
+  deleteBook,
 }) => {
   return (
     <div>
@@ -56,11 +59,16 @@ const Book: React.FC<BookProps> = ({
             shape='circle'
             danger
             icon={<DeleteOutlined />}
+            onClick={clickDelete}
           />
         </Tooltip>
       </div>
     </div>
   );
+
+  function clickDelete() {
+    deleteBook(bookId);
+  }
 };
 
 export default Book;

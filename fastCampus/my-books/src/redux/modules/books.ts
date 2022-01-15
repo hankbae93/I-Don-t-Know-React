@@ -46,9 +46,14 @@ export default reducer;
 
 // saga
 
-export const { getBooks, addBook } = createActions("GET_BOOKS", "ADD_BOOK", {
-  prefix,
-});
+export const { getBooks, addBook, deleteBook } = createActions(
+  "GET_BOOKS",
+  "ADD_BOOK",
+  "DELETE_BOOK",
+  {
+    prefix,
+  }
+);
 
 function* getBooksSaga() {
   try {
@@ -78,7 +83,22 @@ function* addBookSaga(action: Action<BookReqType>) {
   }
 }
 
+function* deleteBookSaga(action: Action<number>) {
+  try {
+    const bookId = action.payload;
+    yield put(pending());
+
+    const token: string = yield select((state) => state.auth.token);
+    yield call(BookService.deleteBook, token, bookId);
+    const books: BookType[] = yield select((state) => state.books.books);
+    yield put(success(books.filter((book) => book.bookId !== bookId)));
+  } catch (error: any) {
+    yield put(fail(new Error(error?.response?.data?.error || "UNKNOWN ERROR")));
+  }
+}
+
 export function* booksSaga() {
   yield takeLatest(`${prefix}/GET_BOOKS`, getBooksSaga); // 중복되는 사가중에서 제일마지막을 가져오는 메소드
   yield takeEvery(`${prefix}/ADD_BOOK`, addBookSaga);
+  yield takeEvery(`${prefix}/DELETE_BOOK`, deleteBookSaga);
 }
