@@ -44,25 +44,19 @@ const Filter = ({ data }) => {
   }, [location]);
 
   useEffect(() => {
-    setAuthors(getAuthorList(data));
-  }, [data]);
-
-  useEffect(() => {
     if (query) {
       // console.log(checkedAuthors);
       const newQuery = getQuery({
         query,
         price,
         date,
-        // ...(checkedAuthors.length > 0 && { authors: checkedAuthors }),
+        ...(checkedAuthors.length > 0 && {
+          authors: getAuthorList(checkedAuthors),
+        }),
       });
       history.push(newQuery);
     }
-  }, [query, price, date, checkedAuthors.length > 0]);
-
-  useEffect(() => {
-    console.log(getAuthorList(checkedAuthors));
-  }, [checkedAuthors]);
+  }, [query, price, date, checkedAuthors]);
 
   return (
     <Container>

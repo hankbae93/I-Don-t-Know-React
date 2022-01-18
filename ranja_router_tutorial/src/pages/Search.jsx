@@ -34,6 +34,17 @@ const Search = () => {
         })
       );
     }
+    if (query.authors) {
+      const arr = query.authors;
+      setList((prev) => {
+        return prev.filter((item) => {
+          const itemAuthors = item.authors;
+          return itemAuthors.some((el) => {
+            return arr.includes(el);
+          });
+        });
+      });
+    }
   };
 
   const init = async () => {
@@ -53,7 +64,8 @@ const Search = () => {
 
   return (
     <>
-      <Filter data={list} />
+      {list.length > 0 && <Filter data={list} />}
+
       <BookList data={list} setList={setList} />
     </>
   );

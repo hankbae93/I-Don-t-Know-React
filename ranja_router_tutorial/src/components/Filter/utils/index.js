@@ -1,5 +1,6 @@
 export function getQuery(data) {
   let query = "?";
+  console.log(data);
   for (const key of Object.entries(data)) {
     if (key[1]) {
       if (Array.isArray(key[1]) && key[1].length > 0) {
