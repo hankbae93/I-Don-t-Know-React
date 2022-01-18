@@ -10,10 +10,9 @@ const Search = () => {
   const location = useLocation();
   const [list, setList] = useState([]);
 
-  // 주소이동에 따른 API 호출
-  // 각 필터, 검색어는 주소이동만 하고 그 주소이동 후 쿼리를 체크하고 API를 호출하게 설정
   const getBooks = async (query) => {
     await axios.get(`/book?query=${query}&size=30`).then((res) => {
+      console.log(res);
       if (res.data) {
         const booksData = res.data.documents ?? [];
         setList((prev) => booksData);
@@ -21,26 +20,30 @@ const Search = () => {
     });
   };
 
+  const sortByQuery = () => {
+    const query = queryString.parse(location.search);
+    if (query.price) {
+      setList((prev) => prev.filter((item) => item.sale_price <= query.price));
+    }
+    if (query.date) {
+      setList((prev) =>
+        prev.filter((item) => {
+          const itemDate = new Date(item.datetime);
+          const queryDate = new Date(query.date);
+          return queryDate < itemDate;
+        })
+      );
+    }
+  };
+
   const init = async () => {
     const query = queryString.parse(location.search);
     const isQuery = Object.keys(query).length !== 0;
-    if (isQuery) {
-      if (query.query) {
-        await getBooks(query.query);
-      }
-
-      if (query.price) {
-        setList((prev) =>
-          prev.filter((data) => query.price >= data.sale_price)
-        );
-      }
-
-      if (query.authors) {
-        const authors = query.authors;
-        setList((prev) =>
-          prev.filter((data) => data.authors.some((el) => authors.includes(el)))
-        );
-      }
+    if (query.query) {
+      await getBooks(query.query);
+      sortByQuery();
+    } else {
+      setList([]);
     }
   };
 
@@ -51,7 +54,7 @@ const Search = () => {
   return (
     <>
       <Filter data={list} />
-      <BookList data={list} />
+      <BookList data={list} setList={setList} />
     </>
   );
 };
