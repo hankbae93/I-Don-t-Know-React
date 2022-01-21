@@ -68,3 +68,26 @@ import * as React from "react";
 import { useState } from 'react';
 
 ```
+
+## useCallback in Typescript
+
+함수를 하나 더 씌우면 타입추론을 하는데 방해하기 때문에 인라인에 쓸때는 useCallback의 제네릭에 타이핑해주기도 한다..
+
+```tsx
+const App: React.FC = () => {
+  const onChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(e.target.value);
+  }, []);
+
+  return (
+    <input
+      onChange={useCallback<(e: React.ChangeEvent<HTMLInputElement>) => void>(
+        (e) => {
+          setValue(e.target.value);
+        },
+        []
+      )}
+    />
+  );
+};
+```
