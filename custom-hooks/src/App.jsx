@@ -11,6 +11,7 @@ import PreventLeave from "./components/use-prevent-leave";
 import Scroll from "./components/use-scroll";
 import Tabs from "./components/use-tabs";
 import Titles from "./components/use-title";
+import Toggle from "./components/use-toggle";
 
 function App() {
 	return (
@@ -27,7 +28,8 @@ function App() {
 			{/* <FadeIn /> */}
 			{/* <Scroll /> */}
 			{/* <FullScreen /> */}
-			<AxiosComponent />
+			{/* <AxiosComponent /> */}
+			<Toggle />
 		</>
 	);
 }
